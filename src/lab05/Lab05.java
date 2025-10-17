@@ -15,8 +15,8 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
- *
- * @author 6324569
+ * github.com/QuentinProulx/Lab05
+ * @author Quentin Proulx 6324569
  */
 public class Lab05 extends Application {
 

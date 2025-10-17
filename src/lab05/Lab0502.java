@@ -14,11 +14,14 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
- *
- * @author quent
+ * github.com/QuentinProulx/Lab05
+ * @author Quentin Proulx 6324569
  */
 public class Lab0502 extends Application {
     double price = 0;
+    double subPrice = 0;
+    double tipGiven = 0;
+    double tax = 0;
     
     public static void main(String[] args) {
         launch(args);
@@ -109,23 +112,68 @@ public class Lab0502 extends Application {
         gridPane.add(tips, 0, 1);
         
             // Creating buttons
+        GridPane finalPrices = new GridPane();
+        Label finalTax = new Label("Tax: $0.0");
+        Label finalTip = new Label("Tip: $0.0");
+        Label subTotal = new Label("Subtotal: $0.0");
         Label total = new Label("Total Price: $0.0");
-            
+        
+        finalPrices.add(finalTax, 0, 0);
+        finalPrices.add(finalTip, 0, 1);
+        finalPrices.add(subTotal, 0, 2);
+        finalPrices.add(total, 0, 3);
+        
+        finalPrices.setVgap(10);
+        finalPrices.setAlignment(Pos.CENTER);
+        
+        for (Node node : finalPrices.getChildren()) {
+            GridPane.setHalignment(node, HPos.CENTER);
+        }
+        
         Button calculate = new Button("Calculate");
-        calculate.setOnMouseClicked(e -> {
-            double newPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
+        beverage.setOnAction(e -> {
+            subPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
                     + appetizerPrices[appetizer.getSelectionModel().getSelectedIndex()]
                     + mainCoursePrices[mainCourse.getSelectionModel().getSelectedIndex()]
                     + dessertPrices[dessert.getSelectionModel().getSelectedIndex()];
-            price += newPrice + newPrice * (tip.getValue() / 100);
-            
-            total.setText("Total Price: $" + (double)(Math.round(price * 100)) / 100);
+            update(subPrice, tip, finalTax, finalTip, subTotal, total);
+        });
+        appetizer.setOnAction(e -> {
+            subPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
+                    + appetizerPrices[appetizer.getSelectionModel().getSelectedIndex()]
+                    + mainCoursePrices[mainCourse.getSelectionModel().getSelectedIndex()]
+                    + dessertPrices[dessert.getSelectionModel().getSelectedIndex()];
+            update(subPrice, tip, finalTax, finalTip, subTotal, total);
+        });
+        mainCourse.setOnAction(e -> {
+            subPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
+                    + appetizerPrices[appetizer.getSelectionModel().getSelectedIndex()]
+                    + mainCoursePrices[mainCourse.getSelectionModel().getSelectedIndex()]
+                    + dessertPrices[dessert.getSelectionModel().getSelectedIndex()];
+            update(subPrice, tip, finalTax, finalTip, subTotal, total);
+        });
+        dessert.setOnAction(e -> {
+            subPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
+                    + appetizerPrices[appetizer.getSelectionModel().getSelectedIndex()]
+                    + mainCoursePrices[mainCourse.getSelectionModel().getSelectedIndex()]
+                    + dessertPrices[dessert.getSelectionModel().getSelectedIndex()];
+            update(subPrice, tip, finalTax, finalTip, subTotal, total);
+        });
+        tip.valueProperty().addListener((obs, oldVal, newVal) -> {
+            subPrice = beveragePrices[beverage.getSelectionModel().getSelectedIndex()]
+                    + appetizerPrices[appetizer.getSelectionModel().getSelectedIndex()]
+                    + mainCoursePrices[mainCourse.getSelectionModel().getSelectedIndex()]
+                    + dessertPrices[dessert.getSelectionModel().getSelectedIndex()];
+            update(subPrice, tip, finalTax, finalTip, subTotal, total);
         });
         
         Button clear = new Button("Clear");
         clear.setOnMouseClicked(e -> {
             price = 0;
             total.setText("Total Price: $0.0");
+            subTotal.setText("Subtotal: $0.0");
+            finalTip.setText("Tip: $0.0");
+            finalTax.setText("Tax: $0.0");
             tip.setValue(10);
             beverage.getSelectionModel().select(0);
             appetizer.getSelectionModel().select(0);
@@ -133,23 +181,15 @@ public class Lab0502 extends Application {
             dessert.getSelectionModel().select(0);
         });
         
-        GridPane buttons = new GridPane();
-        buttons.add(calculate, 0, 0);
-        buttons.add(clear, 1, 0);
-        
-        buttons.setAlignment(Pos.CENTER);
-        buttons.setHgap(10);
-        buttons.setVgap(10);
-        
-        gridPane.add(buttons, 0, 2);
-        gridPane.add(total, 0, 3);
+        gridPane.add(clear, 0, 2);
+        gridPane.add(finalPrices, 0, 3);
         
         for (Node node : gridPane.getChildren()) {
             GridPane.setHalignment(node, HPos.CENTER);
         }
         
         BorderPane root = new BorderPane(gridPane, null, null, null, null);
-        Scene scene = new Scene(root, 600, 275);
+        Scene scene = new Scene(root, 600, 350);
         
         stage.setScene(scene);
         stage.setTitle("Restaurant Application");
@@ -157,4 +197,14 @@ public class Lab0502 extends Application {
         stage.show();
     }
     
+    private void update(double subPrice, Slider tip, Label finalTax, Label finalTip, Label subTotal, Label total) {
+            tax = subPrice * 0.14975;
+            tipGiven = subPrice * (tip.getValue() / 100);
+            price = subPrice + tipGiven + tax;
+            
+            finalTax.setText("Tax: $" + (double) (Math.round(tax * 100)) / 100);
+            finalTip.setText("Tip: $" + (double) (Math.round(tipGiven * 100)) / 100);
+            subTotal.setText("Subtotal: $" + (double) (Math.round(subPrice * 100)) / 100);
+            total.setText("Total Price: $" + (double)(Math.round(price * 100)) / 100);
+    }
 }

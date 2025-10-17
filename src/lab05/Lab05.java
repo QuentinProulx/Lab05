@@ -36,6 +36,7 @@ public class Lab05 extends Application {
         choices.setPrefWidth(300);
         choices.setPrefHeight(225);
         choices.getItems().addAll("Full Decorative", "Beaded", "Pirate Design", "Fringed", "Leather", "Plain");
+        choices.getSelectionModel().select(0);
         
             // Creating the RadioButtons
         ToggleGroup sizes = new ToggleGroup();
@@ -56,6 +57,8 @@ public class Lab05 extends Application {
         small.setToggleGroup(sizes);
         medium.setToggleGroup(sizes);
         large.setToggleGroup(sizes);
+        
+        sizes.selectToggle(small);
         
         GridPane buttons = new GridPane();
         buttons.add(smallText, 0, 0);
@@ -85,14 +88,14 @@ public class Lab05 extends Application {
         Label result = new Label();
         Button order = new Button("Place Order");
         order.setOnMouseClicked(e -> {
-            result.setText("You ordered " + quantity.getSelectionModel().getSelectedItem() + " " + sizes.getSelectedToggle().getUserData() + " " + choices.getSelectionModel().getSelectedItem() + " Bags.");
+            result.setText("You ordered " + quantity.getSelectionModel().getSelectedItem() + " " + sizes.getSelectedToggle().getUserData() + " " + choices.getSelectionModel().getSelectedItem() + " Bag(s).");
         });
         
         Button clear = new Button("Clear Selections");
         clear.setOnMouseClicked(e -> {
-            sizes.getSelectedToggle().setSelected(false);
+            sizes.selectToggle(small);
             quantity.getSelectionModel().select(0);
-            choices.getSelectionModel().clearSelection();
+            choices.getSelectionModel().select(0);
         });
         
         GridPane gridPane = new GridPane();

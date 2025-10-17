@@ -45,9 +45,14 @@ public class Lab05 extends Application {
         Label largeText = new Label("Large");
         
         RadioButton small = new RadioButton();
+        small.setUserData("Small");
+        
         RadioButton medium = new RadioButton();
+        medium.setUserData("Medium");
+        
         RadioButton large = new RadioButton();
-            
+        large.setUserData("Large");
+        
         small.setToggleGroup(sizes);
         medium.setToggleGroup(sizes);
         large.setToggleGroup(sizes);
@@ -69,6 +74,8 @@ public class Lab05 extends Application {
             GridPane.setHalignment(node, HPos.CENTER);
         }
         
+            // Creating the rest of the objects
+        
         Label select = new Label ("Select Quantity:");
         
         ComboBox<Integer> quantity = new ComboBox<>();
@@ -76,8 +83,17 @@ public class Lab05 extends Application {
         quantity.setValue(1);
         
         Label result = new Label();
-        Button place = new Button("Place Order");
+        Button order = new Button("Place Order");
+        order.setOnMouseClicked(e -> {
+            result.setText("You ordered " + quantity.getSelectionModel().getSelectedItem() + " " + sizes.getSelectedToggle().getUserData() + " " + choices.getSelectionModel().getSelectedItem() + " Bags.");
+        });
+        
         Button clear = new Button("Clear Selections");
+        clear.setOnMouseClicked(e -> {
+            sizes.getSelectedToggle().setSelected(false);
+            quantity.getSelectionModel().select(0);
+            choices.getSelectionModel().clearSelection();
+        });
         
         GridPane gridPane = new GridPane();
         gridPane.add(label, 0, 0);
@@ -86,10 +102,11 @@ public class Lab05 extends Application {
         gridPane.add(quantity, 3, 0);
         
         gridPane.add(buttons, 1, 1);
-        gridPane.add(place, 2, 1);
+        gridPane.add(order, 2, 1);
         gridPane.add(clear, 3, 1);
         
         gridPane.add(result, 1, 2);
+        GridPane.setHalignment(result, HPos.CENTER);
         
         gridPane.setHgap(10);
         gridPane.setVgap(20);
@@ -101,6 +118,7 @@ public class Lab05 extends Application {
         gridPane.setTranslateY(20);
         
         stage.setScene(scene);
+        stage.setTitle("Bag Order Form");
         stage.setResizable(false);
         stage.show();
     }
